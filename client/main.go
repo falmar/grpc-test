@@ -2,10 +2,10 @@ package main
 
 import (
 	"bitbucket.org/falmar/grpc-test/pb"
-	"context"
 	"fmt"
 	"google.golang.org/grpc"
 	"log"
+	"os"
 )
 
 func main() {
@@ -17,19 +17,19 @@ func main() {
 
 	client := pb.NewTODOClient(con)
 
-	res, err := client.List(context.Background(), &pb.ListRequest{})
+	command, err := parseCommand(os.Args[1:])
+
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+
+	switch command.(type) {
+	case ListFlags:
+		err = List(client, command.(ListFlags))
+	}
 
 	if err != nil {
 		log.Fatal(err)
-	}
-
-	for {
-		todo, err := res.Recv()
-
-		if err != nil {
-			break
-		}
-
-		fmt.Println(todo)
 	}
 }
