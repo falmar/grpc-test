@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"github.com/satori/go.uuid"
 	"strings"
 )
@@ -21,6 +22,7 @@ type ListFilter struct {
 type DataLayer interface {
 	List(filter ListFilter) ([]*TODO, error)
 	Create(todo *TODO) error
+	Update(todo *TODO) error
 }
 
 type dataLayer struct {
@@ -71,6 +73,26 @@ func (dl *dataLayer) Create(t *TODO) error {
 	t.ID = uuid.NewV4().String()
 
 	dl.data = append(dl.data, t)
+
+	return nil
+}
+
+func (dl *dataLayer) Update(t *TODO) error {
+	var f *TODO
+
+	for _, v := range dl.data {
+		if v.ID == t.ID {
+			f = v
+			break
+		}
+	}
+
+	if f == nil {
+		return fmt.Errorf("no TODO found with ID %s", t.ID)
+	}
+
+	f.Completed = t.Completed
+	t = f
 
 	return nil
 }

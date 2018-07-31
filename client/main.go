@@ -27,8 +27,12 @@ func main() {
 	switch command.(type) {
 	case ListFlags:
 		err = List(client, command.(ListFlags))
+
 	case CreateFlags:
 		err = Create(client, command.(CreateFlags))
+
+	case UpdateFlags:
+		err = Update(client, command.(UpdateFlags))
 	}
 
 	if err != nil {

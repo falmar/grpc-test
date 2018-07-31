@@ -6,9 +6,9 @@ import (
 	"fmt"
 )
 
-func Create(client pb.TODOClient, flags CreateFlags) error {
-	res, err := client.Create(context.Background(), &pb.Todo{
-		Name:      flags.name,
+func Update(client pb.TODOClient, flags UpdateFlags) error {
+	res, err := client.MarkCompleted(context.Background(), &pb.Todo{
+		ID:        flags.id,
 		Completed: flags.completed,
 	})
 

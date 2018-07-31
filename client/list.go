@@ -9,9 +9,10 @@ import (
 
 func List(client pb.TODOClient, flags ListFlags) error {
 	res, err := client.List(context.Background(), &pb.ListRequest{
-		Query:  flags.query,
-		Limit:  flags.limit,
-		Offset: flags.offset,
+		Query:     flags.query,
+		Limit:     flags.limit,
+		Offset:    flags.offset,
+		Completed: flags.completed,
 	})
 
 	if err != nil {

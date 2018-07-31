@@ -6,6 +6,7 @@ package pb;
 service TODO {
     rpc List (ListRequest) returns (stream Todo) {};
     rpc Create (Todo) returns (Todo) {};
+    rpc MarkCompleted (Todo) returns (Todo) {};
 }
 
 message Todo {
@@ -20,6 +21,7 @@ message ListRequest {
     string Query = 1;
     int64 Limit = 2;
     int64 Offset = 3;
+    bool Completed = 4;
 }
 
 message GetRequest {
