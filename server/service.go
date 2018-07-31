@@ -2,6 +2,7 @@ package main
 
 import (
 	"bitbucket.org/falmar/grpc-test/pb"
+	"context"
 )
 
 func NewService(dl DataLayer) *service {
@@ -15,12 +16,11 @@ type service struct {
 }
 
 func (s *service) List(rq *pb.ListRequest, stm pb.TODO_ListServer) error {
-
 	todos, err := s.dl.List(ListFilter{
-		rq.Query,
-		false,
-		rq.Limit,
-		rq.Offset,
+		Query:     rq.Query,
+		Completed: false,
+		Limit:     rq.Limit,
+		Offset:    rq.Offset,
 	})
 
 	if err != nil {
@@ -36,4 +36,23 @@ func (s *service) List(rq *pb.ListRequest, stm pb.TODO_ListServer) error {
 	}
 
 	return nil
+}
+
+func (s *service) Create(ctx context.Context, rq *pb.Todo) (*pb.Todo, error) {
+	t := &TODO{
+		Name:      rq.Name,
+		Completed: rq.Completed,
+	}
+
+	err := s.dl.Create(t)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &pb.Todo{
+		ID:        t.ID,
+		Name:      t.Name,
+		Completed: t.Completed,
+	}, nil
 }

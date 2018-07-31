@@ -5,6 +5,7 @@ package pb;
 // The greeting service definition.
 service TODO {
     rpc List (ListRequest) returns (stream Todo) {};
+    rpc Create (Todo) returns (Todo) {};
 }
 
 message Todo {

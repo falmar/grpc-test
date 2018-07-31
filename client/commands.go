@@ -11,6 +11,10 @@ type ListFlags struct {
 	offset int64
 }
 
+type CreateFlags struct {
+	data string
+}
+
 func parseCommand(args []string) (interface{}, error) {
 	if len(args) < 1 {
 		printBasicUsage()
@@ -30,6 +34,22 @@ func parseCommand(args []string) (interface{}, error) {
 		err := set.Parse(args[1:])
 
 		return lf, err
+	case "create":
+		f := CreateFlags{}
+
+		set := flag.NewFlagSet("create", flag.ExitOnError)
+
+		set.StringVar(&f.data, "body", "", "TODO Body")
+
+		err := set.Parse(args[1:])
+
+		if len(f.data) == 0 {
+			set.PrintDefaults()
+
+			return nil, fmt.Errorf("body cannot be empty")
+		}
+
+		return f, err
 	default:
 		printBasicUsage()
 
