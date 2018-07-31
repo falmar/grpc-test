@@ -11,7 +11,10 @@ func main() {
 
 	s := grpc.NewServer()
 
-	pb.RegisterTODOServer(s, &service{})
+	dl := NewDataLayer()
+	svc := NewService(dl)
+
+	pb.RegisterTODOServer(s, svc)
 
 	s.Serve(lis)
 }

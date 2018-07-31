@@ -2,60 +2,36 @@ package main
 
 import (
 	"bitbucket.org/falmar/grpc-test/pb"
-	"strings"
 )
 
-type TODOItem map[string]interface{}
-
-var todoRepo = []TODOItem{
-	{
-		"ID":        "uuid-1",
-		"Name":      "Make a cli client",
-		"Completed": false,
-	},
-	{
-		"ID":        "uuid-2",
-		"Name":      "Implement list",
-		"Completed": false,
-	}, {
-		"ID":        "uuid-3",
-		"Name":      "implement get",
-		"Completed": false,
-	},
+func NewService(dl DataLayer) *service {
+	return &service{
+		dl: dl,
+	}
 }
 
-type service struct{}
+type service struct {
+	dl DataLayer
+}
 
 func (s *service) List(rq *pb.ListRequest, stm pb.TODO_ListServer) error {
-	var filtered []TODOItem
 
-	for _, v := range todoRepo {
-		if !strings.Contains(v["Name"].(string), rq.Query) {
-			continue
-		}
+	todos, err := s.dl.List(ListFilter{
+		rq.Query,
+		false,
+		rq.Limit,
+		rq.Offset,
+	})
 
-		filtered = append(filtered, v)
+	if err != nil {
+		return err
 	}
 
-	max := int64(len(filtered))
-
-	if rq.Limit < 0 {
-		rq.Limit = 0
-	} else if rq.Limit > max {
-		rq.Limit = max
-	}
-
-	if rq.Offset < 0 {
-		rq.Offset = 0
-	} else if rq.Offset+1 > max {
-		rq.Offset = max
-	}
-
-	for _, v := range filtered[rq.Offset:rq.Limit] {
+	for _, v := range todos {
 		stm.Send(&pb.Todo{
-			ID:        v["ID"].(string),
-			Name:      v["Name"].(string),
-			Completed: v["Completed"].(bool),
+			ID:        v.ID,
+			Name:      v.Name,
+			Completed: v.Completed,
 		})
 	}
 

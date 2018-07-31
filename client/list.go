@@ -15,8 +15,10 @@ func List(client pb.TODOClient, flags ListFlags) error {
 	})
 
 	if err != nil {
-		return nil
+		return err
 	}
+
+	var any bool
 
 	for {
 		todo, err := res.Recv()
@@ -27,7 +29,13 @@ func List(client pb.TODOClient, flags ListFlags) error {
 			return err
 		}
 
+		any = true
+
 		fmt.Println(todo)
+	}
+
+	if !any {
+		fmt.Println("No TODOs found.")
 	}
 
 	return nil
