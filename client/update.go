@@ -1,9 +1,9 @@
 package main
 
 import (
-	"bitbucket.org/falmar/grpc-test/pb"
 	"context"
 	"fmt"
+	"github.com/falmar/grpc-test/pb"
 )
 
 func Update(client pb.TODOClient, flags UpdateFlags) error {

@@ -1,8 +1,8 @@
 package main
 
 import (
-	"bitbucket.org/falmar/grpc-test/pb"
 	"context"
+	"github.com/falmar/grpc-test/pb"
 )
 
 func Delete(client pb.TODOClient, flags DeleteFlags) error {

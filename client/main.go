@@ -1,8 +1,8 @@
 package main
 
 import (
-	"bitbucket.org/falmar/grpc-test/pb"
 	"fmt"
+	"github.com/falmar/grpc-test/pb"
 	"google.golang.org/grpc"
 	"log"
 	"os"
