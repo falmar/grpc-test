@@ -33,6 +33,9 @@ func main() {
 
 	case UpdateFlags:
 		err = Update(client, command.(UpdateFlags))
+
+	case DeleteFlags:
+		err = Delete(client, command.(DeleteFlags))
 	}
 
 	if err != nil {

@@ -23,6 +23,7 @@ type DataLayer interface {
 	List(filter ListFilter) ([]*TODO, error)
 	Create(todo *TODO) error
 	Update(todo *TODO) error
+	Delete(id string) error
 }
 
 type dataLayer struct {
@@ -93,6 +94,33 @@ func (dl *dataLayer) Update(t *TODO) error {
 
 	f.Completed = t.Completed
 	t = f
+
+	return nil
+}
+
+func (dl *dataLayer) Delete(id string) error {
+	var f *TODO
+	var ci int
+
+	for i, v := range dl.data {
+		if v.ID == id {
+			ci = i
+			f = v
+			break
+		}
+	}
+
+	if f == nil {
+		return fmt.Errorf("no TODO found with ID %s", id)
+	}
+
+	ln := len(dl.data)
+
+	if ci+1 > ln {
+		dl.data = dl.data[ln-1:]
+	} else {
+		dl.data = append(dl.data[:ci], dl.data[ci+1:]...)
+	}
 
 	return nil
 }

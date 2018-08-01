@@ -7,6 +7,7 @@ service TODO {
     rpc List (ListRequest) returns (stream Todo) {};
     rpc Create (Todo) returns (Todo) {};
     rpc MarkCompleted (Todo) returns (Todo) {};
+    rpc Delete (Todo) returns (Empty) {};
 }
 
 message Todo {

@@ -22,6 +22,11 @@ type UpdateFlags struct {
 	completed bool
 }
 
+type DeleteFlags struct {
+	id        string
+	completed bool
+}
+
 func parseCommand(args []string) (interface{}, error) {
 	if len(args) < 1 {
 		printBasicUsage()
@@ -66,8 +71,25 @@ func parseCommand(args []string) (interface{}, error) {
 
 		set := flag.NewFlagSet("update", flag.ExitOnError)
 
-		set.StringVar(&f.id, "id", "", "TODO Body")
+		set.StringVar(&f.id, "id", "", "TODO id")
 		set.BoolVar(&f.completed, "c", false, "set TODO as completed")
+
+		err := set.Parse(args[1:])
+
+		if len(f.id) == 0 {
+			set.PrintDefaults()
+
+			return nil, fmt.Errorf("id cannot be empty")
+		}
+
+		return f, err
+
+	case "delete":
+		f := DeleteFlags{}
+
+		set := flag.NewFlagSet("delete", flag.ExitOnError)
+
+		set.StringVar(&f.id, "id", "", "TODO id")
 
 		err := set.Parse(args[1:])
 

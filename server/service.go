@@ -75,3 +75,7 @@ func (s *service) MarkCompleted(ctx context.Context, rq *pb.Todo) (*pb.Todo, err
 		Completed: t.Completed,
 	}, nil
 }
+
+func (s *service) Delete(ctx context.Context, rq *pb.Todo) (*pb.Empty, error) {
+	return &pb.Empty{}, s.dl.Delete(rq.ID)
+}
